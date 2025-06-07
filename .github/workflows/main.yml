@@ -33,8 +33,10 @@ jobs:
       - name: تفعيل Chrome Remote Desktop (تسجيل الجهاز مع إدخال PIN تلقائي)
         run: |
           expect -c '
-          spawn DISPLAY= /opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4tel8gk8-q036BsxFoObewFq-OqHC_EjlhpvvTDHk4pIpZNZxXjjYNXjEh__ZWwQ" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$(hostname)
+          spawn DISPLAY= /opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4fXSSaCSS8n2_ISi_hE3egZ41tPjphKSTNV0KlZdhR01zT8bNJEEqniwswMEYvtw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$(hostname)
           expect "Enter your PIN:"
+          send "12345678\r"
+          expect "Enter your PIN again:"
           send "12345678\r"
           expect eof
           '
@@ -42,4 +44,4 @@ jobs:
       - name: إبقاء الجلسة نشطة
         run: |
           echo "سطح المكتب جاهز! يمكنك الآن الاتصال به عبر Chrome Remote Desktop."
-          sleep 21600 # يبقي الجلسة نشطة لمدة 6 ساعات (الحد الأقصى لجلسة GitHub Actions)
+          sleep 21600 # يبقي الجلسة نشطة لمدة 6 ساعات
