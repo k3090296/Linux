@@ -35,7 +35,8 @@ jobs:
           HOSTNAME: ${{ runner.hostname }}
         run: |
           expect -c '
-          spawn DISPLAY= /opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4fXSSaCSS8n2_ISi_hE3egZ41tPjphKSTNV0KlZdhR01zT8bNJEEqniwswMEYvtw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$env(HOSTNAME)
+          set env(DISPLAY) ""
+          spawn /opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4fXSSaCSS8n2_ISi_hE3egZ41tPjphKSTNV0KlZdhR01zT8bNJEEqniwswMEYvtw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$env(HOSTNAME)
           expect "Enter your PIN:"
           send "12345678\r"
           expect "Enter your PIN again:"
