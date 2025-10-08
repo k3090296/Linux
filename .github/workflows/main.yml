@@ -1,50 +1,43 @@
-name: Chrome Remote Desktop Ubuntu
+services:
 
-on:
-  workflow_dispatch:
+  windows:
 
-jobs:
-  desktop:
-    runs-on: ubuntu-latest
+    image: dockurr/windows
 
-    steps:
-      - name: تحديث النظام وتثبيت wget
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
+    container_name: windows
 
-      - name: تحميل وتثبيت Chrome Remote Desktop
-        run: |
-          wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
-          sudo apt-get install -y ./chrome-remote-desktop_current_amd64.deb || sudo apt-get -f install -y
+    environment:
 
-      - name: تثبيت XFCE4 وبيئة سطح المكتب
-        run: |
-          sudo DEBIAN_FRONTEND=noninteractive \
-            apt install --assume-yes xfce4 desktop-base dbus-x11 xscreensaver
+      VERSION: "10"
 
-      - name: إعداد جلسة سطح المكتب
-        run: |
-          echo "exec /etc/X11/Xsession /usr/bin/xfce4-session" | sudo tee /etc/chrome-remote-desktop-session
+      USERNAME: "MASTER"
 
-      - name: تثبيت expect
-        run: sudo apt-get install -y expect
+      PASSWORD: "admin@123"
 
-      - name: تفعيل Chrome Remote Desktop (تسجيل الجهاز مع إدخال PIN تلقائي)
-        env:
-          HOSTNAME: ${{ runner.hostname }}
-        run: |
-          expect -c '
-          set env(DISPLAY) ""
-          spawn /opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4fXSSaCSS8n2_ISi_hE3egZ41tPjphKSTNV0KlZdhR01zT8bNJEEqniwswMEYvtw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$env(HOSTNAME)
-          expect "Enter your PIN:"
-          send "12345678\r"
-          expect "Enter your PIN again:"
-          send "12345678\r"
-          expect eof
-          '
+      RAM_SIZE: "4G"
 
-      - name: إبقاء الجلسة نشطة
-        run: |
-          echo "سطح المكتب جاهز! يمكنك الآن الاتصال به عبر Chrome Remote Desktop."
-          sleep 21600 # يبقي الجلسة نشطة لمدة 6 ساعات (الحد الأقصى لجلسة GitHub Actions)
+      CPU_CORES: "4"
+
+      DISK_SIZE: "400G"
+
+      DISK2_SIZE: "100G"
+
+    devices:
+
+      - /dev/kvm
+
+      - /dev/net/tun
+
+    cap_add:
+
+      - NET_ADMIN
+
+    ports:
+
+      - "8006:8006"
+
+      - "3389:3389/tcp"
+
+      - "3389:3389/udp"
+
+    stop_grace_period: 2m
